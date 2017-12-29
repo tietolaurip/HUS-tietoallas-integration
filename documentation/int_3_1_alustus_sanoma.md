@@ -13,7 +13,7 @@ Kuvan komponenttien kuvaukset löytyvät erikseen kappaleesta [Integraatiokuvien
 # Toiminnallisuus
 
 ## 1. Komponentin asennus (Manager - deploy component)
-Integraation peruskomponenttion nimeltään "<integraatio>[_<instanssin_nimi>]".
+Integraation peruskomponenttion nimeltään "integraatio[\_instanssin_nimi]".
 
 Komponentin asennus tapahtuu seuraavien periaatteiden mukaan:
 * [Komponenttien asennus](int_2_4_asennus.md)
@@ -21,10 +21,10 @@ Komponentin asennus tapahtuu seuraavien periaatteiden mukaan:
 Komponentti asennetaan Manager-nodelta komponentin KayttoonOtto.md-dokumentin mukaisesti (löytyy komponentin juurihakemistosta Manager-vm:ltä ja myös GIT-repositorystä)
 
 ## 2. Raakadata-altaan tietokannan ja taulujen luonti
-Alustus-prosessi luo integraatiolle tietokannan ja sen taulut metadan avulla (staging_<integraatio>).
+Alustus-prosessi luo integraatiolle tietokannan ja sen taulut metadan avulla (staging_integraatio).
 
 ## 3. Varasto-altaan tietokannan ja taulujen luonti
-Alustus-prosessi luo integraatiolle varasto-tietokannan ja sen taulut metadan avulla (varasto_<integraatio>_historia_log).
+Alustus-prosessi luo integraatiolle varasto-tietokannan ja sen taulut metadan avulla (varasto_integraatio_historia_log).
 
 ## 4. Metadatan päivitys
 Status-kantaan kirjataan kafka_offset_info-tauluun sanomalukuprosessin (streamer) nimi (group_id) ja offset.

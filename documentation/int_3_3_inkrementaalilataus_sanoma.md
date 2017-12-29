@@ -22,7 +22,7 @@ Sanomapohjainen integraatio tarvitsee seuraavat kolme komponenttia toimiakseen
 
 Näistä lataaja-komponentti on puhtaasti integraatiospesifinen ja asentuu integraatiokomponentin mukana.
 
-Asennus hoituu asennusautomaation toimesta.
+Asennukset tehdään Ansibleautomaatiolla.
 
 Kunkin komponentin KayttoonOtto.md ohjeistaa miten se otetaan käyttöön.
 
@@ -35,5 +35,5 @@ Vastaanotto-komponentti kirjoittaa sanomat sellaisenaan tai pienin muokkauksin r
 #### 4. Datan pseudonymisointi
 Pseudonymisointi-komponentti (stream-pseudonymizer) tuottaa raakadatajonosta pseudonymisoitua versiota (kafka topic).
 
-#### 5. Datan lataus Azure Datalake Storeen ja Hiveen
+#### 5. Datan lataus Microsoft Azure Datalake Storeen ja Apache Hiveen
 Lataaja-komponentti (stream-to-hdfs) kirjoittaa viestijonot tietoaltaaseen (Raakadata- ja varastoaltaat).

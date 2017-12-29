@@ -1,5 +1,5 @@
 # JDBC/Kafka-inkrementaalilatauksen yleiskuvaus
-Tämä dokumentti kertoo yleisesti mitä tapahtuu kun tietoaltaaseen ladataan dataa lähdejärjestelmästä käyttäen JDBC:tä ja työntäen näin ladatatun datan Kafka-putkeen
+Tämä dokumentti kertoo yleisesti mitä tapahtuu kun tietoaltaaseen ladataan dataa lähdejärjestelmästä käyttäen JDBC:tä.
 
 Tiedon siirto lähdejärjestelmästä tietoaltaaseen tapahtuu alla olevan kuvan mukaisesti:
 
@@ -14,18 +14,18 @@ Kuvassa näkyvät komponentit kuvataan kappaleessa [Integraatiokuvien komponenti
 Tässä osassa kerrotaan yllä olevan kuvan toimintaperiaate. Alla olevat numerot viittaavat kuvan punaisiin ympäröityihin numeroihin.
 
 ## 1. Komponentin asennus (Manager - deploy component)
-Integraation inkrementaalilataukseta vastaava komponentti on nimeltään "<inkrementin_nimi>[_<instanssin_nimi>]_inkr". 
+Integraation inkrementaalilataukseta vastaava komponentti on nimeltään "integraation_nimi[_instanssin_nimi]_inkr". 
 
 * [Komponenttien asennus](int_2_4_asennus.md)
 
-Jokainen komponentti asennetaan Manager-nodelta komponentin KayttoonOtto.md-dokumentin mukaisesti (löytyy komponentin juurihakemistosta GIT-repositorystä). Jdbc-integraatioiden latauskomponentti asennetaan Headnode-palvelimelle.
+Jokainen komponentti asennetaan Manager-nodelta komponentin KayttoonOtto.md-dokumentin mukaisesti (löytyy komponentin juurihakemistosta GIT-repositorystä). JDBC-integraatioiden latauskomponentti asennetaan Headnode-palvelimelle.
 
 ## 2. Metadatan luku
 Ennen inkrementaalilatausta luetaan integration_status-taulusta lista tauluista, joista inkrementaalilataus tehdään. Inkrementaalilataus suorittaa latauksen vain niistä tauluista, joissa arvona on jotain muuta kuin "EXCLUDE". Tällä tavalla voidaan hallita mistä tauluista inkrementaalilataus suoritetaan. 
 
 ## 3. Intetegraation haku lähdejärjestelmästä
 
-Latauksen varsinainen äly on tässä vaiheessa. Muuttuneiden tietojen löytäminen nopeasti ja luotettavasti on latauksen kriittisin osa. Alla kuvataan tarkemmin minkälaisia logiikoita inkrementaalilatauksissa käytetään.
+Latauksen varsinainen logiikka on tässä vaiheessa. Muuttuneiden tietojen löytäminen nopeasti ja luotettavasti on latauksen kriittisin osa. Alla kuvataan tarkemmin minkälaisia logiikoita inkrementaalilatauksissa käytetään.
 
 #### Inkrementaalilatauksen hakulogiikka (miten löydetään muutokset)
 Säännöllisissä latauksissa tarkoituksena on siirtää pelkästään edellisen latauksen jälkeen muuttuneet tiedot. Integraation lataukseen liittyen tämä inkrementin muutos-logiikan määrittely ja toteutus on yleensä suurin työ. Tällä hetkellä alkulataukselle on kolmea eri tyyppiä: 
@@ -34,8 +34,8 @@ Säännöllisissä latauksissa tarkoituksena on siirtää pelkästään edellise
   * milloin rivit on luotu ja taataan, että luotuihin riveihin ei tehdä muutoksia, tai
   * tarjota identifikaatiokenttää, jonka arvo kasvaa jokaisen uuden rivin kohdalla ja taataan, että olemassaoleviin riveihin ei tehdä muutoksia
 2. TIME_COMPARISATION: Joissakin usein päivittyvissä tauluissa on suoraan käyttökelpoiset muutosaikaleimat, jotka kertovat milloin riviä on muutettu. Näiden taulujen muutokset havaitaan hakemalla rivit joiden muutosaikaleima on suurempi kuin edellisessä latauksessa ladattu suurin aikaleima. 
-3. KEY_COMPARISATION: Uudet rivit haetaan perustuen kasvavaan kokonaislukuavainsarakkeeseen, joka on indeksoitu taulun avainkenttä (<jokin_id>). Jos muutos tehdään indeksöimättömästä kentästä haku saattaa kestää liian kauan toimiakseen. Uudet rivit siis ovat ne, joilla <jokin_id> on suurempi kuin mikään aiemmin ladattu. Tällaisissa tauluissa olemassa oleviin tietoihin ei tehdä muutoksia. 
-4. HISTORY_TABLE_LOOKUP: Tämän on puhtaasti integraatiospecifinen menetelmä, jossa muutokset varsinaisiin datatauluihin saadaan erillisestä "muustos_taulusta", johon lähdejärjestelmän kerää muutoslokia. Kun johonkin tauluun tulee muutos, niin tämä muutos kirjataan muutos_tauluun, minimitiedot ovat
+3. KEY_COMPARISATION: Uudet rivit haetaan perustuen kasvavaan kokonaislukuavainsarakkeeseen, joka on indeksoitu taulun avainkenttä (jokin_id). Jos muutos tehdään indeksöimättömästä kentästä haku saattaa kestää liian kauan toimiakseen. Uudet rivit siis ovat ne, joilla <jokin_id> on suurempi kuin mikään aiemmin ladattu. Tällaisissa tauluissa olemassa oleviin tietoihin ei tehdä muutoksia. 
+4. HISTORY_TABLE_LOOKUP: Tämän on puhtaasti integraatiospesifinen menetelmä, jossa muutokset varsinaisiin datatauluihin saadaan erillisestä muustoshistoriataulusta. Kun johonkin tauluun tulee muutos, niin tämä muutos kirjataan muutos_tauluun, minimitiedot ovat
   * taulun nimi, jossa muutos tapahtui
   * aikaleima, jolloin muutos tehtiin
   * tieto, avaimesta, jolla viitataan data-tauluun
@@ -55,11 +55,10 @@ Integraatiometadatassa on parametri, jonka avulla voi ohjata inkrementaalilatauk
 
     * Jokaiselle taululle voidaan integraation sisällä määritellä milloin taulun muutokset ladataan suhteessa edelliseen lataukseen. Inkrementaalilatausprosessi pitää kirjaa koska se on tehnyt edellisen latauksen. Nyt tämä latausintervalli kertoo kuinka pian jo tehdyn inkrementaalilatauksen jälkeen tehdään uusi lataus. 
     * Inkrementaaliprosessi aktivoituu tietyin ajoin (esim. 5 min) ja ennen latausta skannaa kaikkien integraatioiden taulujen edellisen lataushetken ja päätteleen sen, nykyhetken ja määritellyn latausintervallin avulla mille tauluille suoritetaan inkrementaalilataus. 
-    * Esimerkki: Intervalliksi on merkitty 15 minuuttia. Käynnistäessään uutta inkrementaalilatausta inkrementaaliprosessi lukee status-kannasta koska taulu X on viimeksi ladattu. Arvoksi on kirjattu klo 15:00. Prosessi tarkistaa nykyisen kellon ajan 15:10 ja toteaa, että edellisestä latauksesta ei ole vielä kulunut intervallin määrittelemää aikaa. Prosessi pyörähtää jälleen 5 minuutin kuluttua (15:15) huomaa tällöin , että taulun X edellisestä latauksesta on kulunut 15 minuuttia, joka on >= taululle merkitty inkrementti ja suorittaa inkrementaalilatauksen kyseiselle taululle. 
 
 ## 4. Datan lataus lähdejärjestelmästä (Kafka-vm - JDBC-import)
 
-Tietoaltaan kProducer lataa (pull) lähderjäjestelmästä datan turvatun JDBC-yhteyden yli. 
+Tietoaltaan kProducer lataa lähdejärjestelmästä datan JDBC-yhteyden yli. 
 
 ## 5. Datan syöttö Kafkalle (Sftp - kProducer)
 kProducer syöttää ladatun datan Kafkalle oikealle Topicille (integraatiokohtainen) [Avro](https://avro.apache.org/)-formaatissa. 
@@ -71,7 +70,7 @@ Geneerinen kConsumer käy määräajoin (konfiguroitavissa) tarkastamassa onko s
 kConsumer tallentaa Kafkasta lukemansa datan ensin Azure DataLake Storeen [ORC](https://orc.apache.org/docs/)-formaattiin. Talletettu data on nähtävissä Azuren portalin kautta integraatiospecifisessä kansiossa (/cluster/maindatalake/staging/<integraatio>). Alkulatauksen tiedostot on integraation juurikansiossa ja ikrementtien data alihakemistossa "inc".  
 
 ## 8. Datan tallennus raakadata-altaaseen (Headnode, Hive - Raakadata/Staging)
-kConsumer kirjoittaa datan DataLake Storen lisäksi hiven raakadata-altaaseen sellaisenaan ("raakana"), eli sitä ei prosessoida mitenkään. Hivessä data on talletettuna relaatiotietokannan mukaisesti tauluihin. Hiven:n tietokannan nimi on "staging_<integraatio>". Dataa voi tarkastella Hiven CLI-sovellusilla (esim. [Beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–CommandLineShell)) hql-kyselyiden avulla. 
+kConsumer kirjoittaa datan DataLake Storen lisäksi hiven raakadata-altaaseen sellaisenaan. Hivessä data on talletettuna relaatiotietokannan mukaisesti tauluihin. Hiven:n tietokannan nimi on "staging_integraatio". Dataa voi tarkastella Hiven CLI-sovellusilla (esim. [Beeline](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–CommandLineShell)) hql-kyselyiden avulla. 
 
 ## 9. Datan pseudonymisointi
 kConsumer päättelee dataan liittyvän metadatan perusteella tuleeko data pseydonymisoida vai ei, ja kutsuu ennen datan varastoon tallentamista Pseudonymisointi-palvelua jos pseudonymisoitavaa dataa löytyy. Pseudonymisoinnista löytyy lisätietoja: [Metadata - yleisesitys](03_metadata.md)

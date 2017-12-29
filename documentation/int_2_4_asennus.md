@@ -17,8 +17,8 @@ Tässä kerrotaan mitä tapahtuu asennuksessa Kuvan 1 mukaan.
 Käyttäjä luo paketin kehitysympäristössä. Riippuen hieman komponentista, toimenpiteet ja paketin sisältö hieman eroavat toisistaan. Paketti sisältää mm. Ansible-roolien koodit, dokumentaatiota, metadataa, skriptejä ja mahdollisesti jar-tiedoston.
 Jos komponentti ei sisällä java-koodia, niin jar-tiedostoa ei luoda. Jos taas komponentti sisältää java-koodia, niin joissakin (vanhemmissa) komponenteissa jar-tiedosto sisällytetään asennuspakettiin ja joissakin (komponentit, jotka käynnistetään mikropalveluna) jar-tiedosto ladataan artifactoryyn.
 
-## 2. Jar-tiedoston kopiointi artifactoryyn
-Komponentin jar-tiedostot kopioidaan artifactoryyn. CI-automaatio hoitaa tämän automaattisesti. Manuaalisestikin latauksen voi tehdä (mvn deploy).
+## 2. Jar-tiedoston kopiointi pakettivarastoon (artifactory)
+Komponentin jar-tiedostot kopioidaan pakettivarastoon. 
 
 ## 3. Asennuspaketin siirto Tietoaltaan manager-nodelle
 Käyttäjä siirtää asennuspaketin (*.tgz-, tai *.tar.gz-tiedosto) manager-vm:lle manuaalisesti esim. sftp:llä tai scp:llä.
@@ -28,10 +28,10 @@ Komponentti aktivoidaan Manager-vm:llä activate.sh-komennolla. Tämä käynnist
 
 ## 5. Asennuspaketin Ansible-konfiguraation luku
 Ansible lukee komponentin asennuskonfiguraation ja alkaa suorittaa asennusta sen mukaan.
-Komponentille on luotu erilaisia Ansible-rooleja (<komponentti>/roles), jotka Ansible asentaa asennuskonfiguraation ja Ansible-tehtävien mukaisesti (<komponentti>/roles/tasks). 
+Komponentille on luotu erilaisia Ansible-rooleja (komponentti/roles), jotka Ansible asentaa asennuskonfiguraation ja Ansible-tehtävien mukaisesti (komponentti/roles/tasks). 
 
 ## 6. Komponenttien osien asennus Tietoaltaaseen
-Ansiblen konfiguraatiossa (<komponentti>/activate.yml) on kerrottu mille noodeille mikin rooli asennetaan. Kuvassa nämä asennukset on merkitty kaikki samalla numerolla, mutta käytännössä asennus tapahtuu konfiguraation mukaisessa järjestyksessä.
+Ansiblen konfiguraatiossa (komponentti/activate.yml) on kerrottu mille noodeille mikin rooli asennetaan. Kuvassa nämä asennukset on merkitty kaikki samalla numerolla, mutta käytännössä asennus tapahtuu konfiguraation mukaisessa järjestyksessä.
 
 ## 7. Pyyntö ladata jar-tiedosto artifactorystä
 Ansible kirjatuu artifactoryyn ja suorittaa komennon, jolla aloitetaan viimeisimmän/määritellyn jar-tiedoston lataus.
