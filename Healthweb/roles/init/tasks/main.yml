@@ -1,0 +1,27 @@
+---
+- name: Ensure clean start
+  become: yes
+  file:
+    path: "{{ rest_dir }}"
+    state: absent
+
+- name: Directory for component
+  become: yes
+  file:
+    path: "{{ rest_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Copy schema creation script
+  synchronize:
+    src: "create_schema.hql"
+    dest: "{{ rest_dir }}/create_schema.hql"
+    perms: yes
+
+- name: Create schema
+  shell: hive -v -f create_schema.hql
+  args:
+    chdir: "{{ rest_dir }}"
+  run_once: yes

@@ -1,0 +1,23 @@
+server.port = {{ rest_service_port }}
+
+logging.config=file:{{ rest_dir }}/config/logback.xml
+cda.schemas={{ rest_dir }}/config/schemas/CDA_Fi.xsd
+
+identityManager.url={{ pseudo_rest_url }}
+kafka.bootstrap.servers={{ kafka_bootstrap_server }}:9092
+
+management.port={{ rest_service_port }}
+management.security.role=SUPERUSER
+management.security.enabled=false
+
+endpoints.info.id=info
+endpoints.info.sensitive=false
+endpoints.info.enabled=true
+
+spring.boot.admin.url=http://{{ spring_boot_host }}:1111
+spring.application.name=Healthweb
+spring.boot.admin.username={{ spring_boot_username }}
+spring.boot.admin.password={{ spring_boot_password }}
+
+security.user.name={{ spring_security_username }}
+security.user.password={{ spring_security_password }}

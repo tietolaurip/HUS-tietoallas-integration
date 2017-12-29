@@ -1,0 +1,13 @@
+[Unit]
+Description={{ rest_comp_name }} Integration
+Before=
+After=network.target
+
+[Service]
+User={{ rest_user }}
+WorkingDirectory={{ rest_dir }}
+ExecStart=/usr/bin/java -Xmx2g -jar {{ rest_jar_name }}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

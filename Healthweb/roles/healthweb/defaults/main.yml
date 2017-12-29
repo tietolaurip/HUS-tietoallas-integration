@@ -1,0 +1,12 @@
+spring_boot_host: "localhost"
+
+rest_comp_name: "Healthweb"
+rest_service_name: "healthweb"
+rest_user: "healthweb"
+rest_group: "healthweb"
+rest_dir: "{{ datalake_dir }}/{{ rest_comp_name }}"
+rest_version: "2.1.0"
+rest_jar_name: "healthweb-{{ rest_version }}.jar"
+rest_service_port: "9880"
+
+pseudo_rest_url: "http://192.168.99.100:3000/pseudo"

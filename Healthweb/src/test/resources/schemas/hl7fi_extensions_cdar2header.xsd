@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited 20120127 Timo Kaskinen (Salivirta Oy) rivinvaihtomerkit muutettu CRLF -->
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Markku Torvinen (Kuopion yliopisto) -->
+<xs:schema targetNamespace="urn:hl7finland" xmlns="urn:hl7finland" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:hl7="urn:hl7-org:v3" elementFormDefault="qualified">
+	<xs:import namespace="urn:hl7-org:v3" schemaLocation="infrastructureRoot.xsd"/>
+	<!-- 	<xs:import schemaLocation="datatypes.xsd"/>
+	<xs:import schemaLocation="datatypes-base.xsd"/>
+	<xs:import schemaLocation="voc.xsd"/> -->
+	<xs:complexType name="tableOfContents">
+		<xs:sequence>
+			<xs:element name="contentsCode" type="hl7:CV" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="serviceChainLink">
+		<xs:sequence>
+			<xs:element name="serviceChainLinkId" type="hl7:II"/>
+			<xs:element name="serviceChainLinkName" type="hl7:ST" minOccurs="0"/>
+			<xs:element name="serviceChainLinkCode" type="hl7:CV" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="episodeLink">
+		<xs:sequence>
+			<xs:element name="episodeLinkId" type="hl7:II"/>
+			<xs:element name="episodeLinkName" type="hl7:ST" minOccurs="0"/>
+			<xs:element name="episodeLinkCode" type="hl7:CV" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="product">
+		<xs:sequence>
+			<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="moderator" type="xs:string"/>
+		<xs:attribute name="product" type="xs:string"/>
+		<xs:attribute name="version" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="signatureCollection">
+		<xs:sequence>
+			<xs:element name="signature" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="signatureDescription" type="hl7:CV"/>
+						<xs:element name="signatureTimestamp">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:dateTime">
+										<xs:attribute name="ID" type="xs:ID" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="multipleDocumentSignature" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Ref" minOccurs="2" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:attribute name="OID" type="hl7:oid"/>
+											<xs:attribute name="hash" type="xs:string"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="ID" type="xs:ID" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="ID" type="xs:ID"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="secondaryCustodian">
+		<xs:sequence>
+			<xs:element name="secondaryCustodianId" type="hl7:II"/>
+			<xs:element name="secondaryCustodianRegisterId" type="hl7:CV" minOccurs="0"/>
+			<!-- <xs:element name="linkToDecisionDocument" type="hl7:II" minOccurs="0"/> -->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KantaMetadata">
+		<xs:sequence>
+			<xs:element name="FieldName" type="hl7:II"/>
+			<xs:element name="FieldNameCoded" type="hl7:CV" minOccurs="0"/>
+			<xs:element name="FieldValue" type="hl7:ST"/>
+			<xs:element name="FieldValueAsHL7Datatyped" type="hl7:ST" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="auditTrail">
+		<xs:sequence>
+			<xs:element name="auditTrailCode" type="hl7:CV"/>
+			<xs:element name="auditTrailTime" type="hl7:TS"/>
+			<xs:element name="auditTrailId" type="hl7:II"/>
+			<xs:element name="auditTrailIdEnd" type="hl7:II"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="sender">
+		<xs:sequence>
+			<xs:element name="senderCode" type="hl7:CV"/>
+			<xs:element name="senderName" type="hl7:ST"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="localHeader">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="description" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="tableOfContents" type="tableOfContents" minOccurs="0"/>
+				<xs:element name="registratedTime" type="hl7:TS" minOccurs="0"/>
+				<xs:element name="declaredTime" type="hl7:TS" minOccurs="0"/>
+				<xs:element name="typeCode" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="fileFormat" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="softwareSupport" minOccurs="0">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="moderator" type="xs:string"/>
+								<xs:attribute name="product" type="xs:string"/>
+								<xs:attribute name="version" type="xs:string"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="documentType" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="currentLocation" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="retentionPeriod" type="hl7:TS" minOccurs="0"/>
+				<xs:element name="functionCode" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="recordStatus" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="auditTrail" type="auditTrail" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="serviceChainLink" type="serviceChainLink" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="episodeLink" type="episodeLink" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="product" type="product" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="signatureCollection" type="signatureCollection" minOccurs="0"/>
+				<xs:element name="sender" type="sender" minOccurs="0"/>
+				<xs:element name="password" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="patientRegistrySpecifier" type="hl7:II" minOccurs="0"/>
+				<xs:element name="patientRegistrySpecifierName" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="custodianTypeCode" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="encompassingEncounterCode" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="activeCustodian" type="hl7:II" minOccurs="0"/>
+				<xs:element name="activeCustodianName" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="encompassingEncounterMasterCode" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="secondaryEncompassingEncounterId" type="hl7:II" minOccurs="0"/>
+				<xs:element name="outsourcingServiceCustomer" type="hl7:II" minOccurs="0"/>
+				<xs:element name="outsourcingServiceCustomerName" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="retentionPeriodClass" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="extendedRetentionPeriod" type="hl7:TS" minOccurs="0"/>
+				<xs:element name="sensitiveDocument" type="hl7:CV" minOccurs="0"/>
+				<xs:element name="eprServiceProvider" type="hl7:II" minOccurs="0"/>
+				<xs:element name="eprServiceProviderName" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="releaseDateForPatientViewing" type="hl7:TS" minOccurs="0"/>
+				<xs:element name="patientHomeMunicipality" type="hl7:CV" minOccurs="0"/>
+				<!-- <xs:element name="secondaryCustodian" type="secondaryCustodian" minOccurs="0" maxOccurs="unbounded"/> -->
+				<!-- <xs:element name="activeCustodianCode" type="hl7:CV" minOccurs="0"/> -->
+				<!-- <xs:element name="KantaMetadata" type="KantaMetadata" minOccurs="0" maxOccurs="unbounded"/> 
+				<xs:element name="validConsentId" type="hl7:II" minOccurs="0" maxOccurs="unbounded"/> -->
+				<!--  <xs:element name="taskWorkflowPhase" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="retentionPeriodBasis" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="retentionPeriodCalculationBasis" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="taskGuidingInformation" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="taskAdditionalInformation" type="hl7:ST" minOccurs="0"/> -->
+				<!-- <xs:element name="activeArchiveFormer" type="hl7:II" minOccurs="0"/> -->
+				<!-- <xs:element name="activePatientRegistry" type="hl7:II" minOccurs="0"/>
+				<xs:element name="activePatientRegistrySpecifier" type="hl7:II" minOccurs="0"/> -->
+				<!-- <xs:element name="personInformationDescriptor" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="basisForNondisclosure" type="hl7:ST" minOccurs="0"/>
+				<xs:element name="userGroup" type="hl7:ST" minOccurs="0"/> -->
+				<!-- tämä elementti on poistettu käytöstä 
+					<xs:element name="hasPart" type="hl7:II" minOccurs="0" maxOccurs="0"/> -->
+				<!-- tämä elementti ei ole käytössä, tiedot ilmoitetaan body tasolla
+-->
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
