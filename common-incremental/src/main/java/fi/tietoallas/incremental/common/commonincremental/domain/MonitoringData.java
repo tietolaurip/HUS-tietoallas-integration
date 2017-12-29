@@ -1,0 +1,40 @@
+/*-
+ * #%L
+ * common-incremental
+ * %%
+ * Copyright (C) 2017 Helsingin ja Uudenmaan sairaanhoitopiiri, Helsinki, Finland
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+package fi.tietoallas.incremental.common.commonincremental.domain;
+
+/**
+ * Domain class to store info from kafka message used in monitoring
+ *
+ * @author Antti Kalliokoski
+ */
+
+public class MonitoringData {
+
+    public final String integration;
+    public final String table;
+    public final int sendBytes;
+
+    public MonitoringData(String integration, String table, int sendBytes) {
+        this.integration = integration;
+        this.table = table;
+        this.sendBytes = sendBytes;
+    }
+}
