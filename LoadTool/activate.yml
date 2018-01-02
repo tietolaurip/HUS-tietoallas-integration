@@ -1,0 +1,26 @@
+---
+# Playbook for installing component integration
+
+#############################################################
+# Setup headnode
+#############################################################
+- hosts: headnode
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - headnode
+    - lib
+
+#############################################################
+# Setup sftp
+#############################################################
+- hosts: sftp
+  vars_files:
+    - ../config/vars.yml # base variables
+    - ../StatusDb/config/vars.yml 
+    - ../Metadata/config/vars.yml 
+    - config/vars.yml    # component specific variables
+  roles:
+    - sftp
+    - lib

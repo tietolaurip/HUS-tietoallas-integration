@@ -1,0 +1,5 @@
+source "{{ datalake_dir }}/Metadata/config/config.sh"
+source "{{ datalake_dir }}/StatusDb/config/config.sh"
+export SPARK_MAIN_CLASS="fi.tietoallas.integration.load.LoadToolApplication"
+export SPARK_LOADTOOL_JAR="{{ datalake_dir }}/LoadTool/java/loadtool-jar-with-dependencies.jar"
+export SPARK_PARAMETERS="{{ spark_parameters }}"
