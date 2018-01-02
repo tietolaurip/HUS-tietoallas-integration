@@ -1,0 +1,29 @@
+---
+# Playbook for installing CressidaODS integration
+
+- hosts: manager
+  vars_files:
+    - ../config/vars.yml
+    - ../Metadata/config/vars.yml
+    - ../StatusDb/config/vars.yml
+    - config/vars.yml
+  roles:
+    - manager
+
+- hosts: headnode
+  vars_files:
+    - ../config/vars.yml
+    - ../Metadata/config/vars.yml
+    - ../StatusDb/config/vars.yml
+    - config/vars.yml
+  roles:
+    - headnode
+    - lib
+
+- hosts: worker, headnode
+  become: yes
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - worker

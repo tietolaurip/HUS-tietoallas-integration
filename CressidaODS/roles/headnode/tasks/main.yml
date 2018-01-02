@@ -1,0 +1,56 @@
+---
+- name: Ensure clean start
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: absent
+
+- name: Directory for CressidaODS
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Directory for import
+  become: yes
+  file:
+    path: "{{ comp_dir }}/import"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Copy import files 
+  synchronize:
+    src: "import"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- name: Create config dir and copy vars.yml file
+  synchronize:
+    src: "config"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+# Copy template for this integration (jdbc/kafka) from common templates
+- name: Create config.sh from base jdbc_config.sh.j2
+  template:
+    src: "{{ datalake_dir }}/base/roles/headnode/files/lib/templates/jdbc_config.sh.j2"
+    dest: "{{ comp_dir }}/config/config.sh"
+    mode: 0755
+
+- name: Create log dir
+  become: yes
+  file:
+      path: /var/log/DataLake/CressidaODS/
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
+
+
