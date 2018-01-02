@@ -1,0 +1,16 @@
+- name: Directory for Component integration
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Copy config files
+  synchronize:
+    src: "config"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
