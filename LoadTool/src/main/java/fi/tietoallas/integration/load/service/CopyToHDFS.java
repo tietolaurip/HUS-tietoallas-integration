@@ -31,6 +31,12 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Main class which is run as Spark job
+ *
+ * @author xxkallia
+ */
+
 public class CopyToHDFS {
 
     static SparkSession session;

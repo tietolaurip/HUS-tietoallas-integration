@@ -39,6 +39,12 @@ import static fi.tietoallas.integration.load.service.CopyToHDFS.convertTableName
 import static org.apache.commons.lang3.StringUtils.containsNone;
 import static org.apache.commons.lang3.StringUtils.trim;
 
+/**
+ * Class where parameters are read from startup arguments and status database
+ *
+ * @author xxkallia
+ */
+
 
 public class LoadToolApplication {
 
