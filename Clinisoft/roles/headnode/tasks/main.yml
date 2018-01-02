@@ -1,0 +1,43 @@
+- name: Directory for Component integration
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Copy config files - vars.ymml
+  synchronize:
+    src: "config"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- debug: msg="comp_common_jar= {{ comp_common_jar }}"
+
+- name: Directory import
+  become: yes
+  file:
+    path: "{{ comp_dir }}/import"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Copy import files
+  synchronize:
+    src: "import"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- name: Create log dir
+  become: yes
+  file:
+      path: "{{ datalake_log_dir }}/{{ comp_name }}"
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
+
