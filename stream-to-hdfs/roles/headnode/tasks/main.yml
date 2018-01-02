@@ -1,0 +1,67 @@
+---
+- name: Ensure clean start
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: absent
+
+- name: Create component direcoty
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+  with_items:
+    - "{{ comp_dir }}"
+    - "{{ comp_dir }}/java"
+
+
+- name: Add configuration scripts
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ comp_dir }}/{{ item.dest }}"
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+  with_items:
+    - { src: job.json.j2, dest: job.json }
+    - { src: start_consumer.sh.j2, dest: start_consumer.sh }
+
+- name: Install prequisites for the maven_artifact module (pip)
+  package:
+    name:  python-pip
+    state: latest
+  become: yes
+
+- name: Install prequisites for the maven_artifact module (lxml)
+  pip:
+    name: lxml
+  become: yes
+
+- name: Download application from Artifactory
+  maven_artifact:
+    group_id: fi.tietoallas.integration
+    artifact_id: "{{ comp_name }}"
+    classifier: jar-with-dependencies
+    version: "{{ comp_version }}"
+    repository_url: "{{ datalake_maven_repository }}"
+    username: "{{ datalake_maven_username }}"
+    password: "{{ datalake_maven_password }}"
+    dest: "{{ comp_dir }}/java/{{ comp_jar }}"
+  become: yes
+
+- name: Change downloaded jar permissions
+  file:
+    path: "{{ comp_dir }}/java/{{ comp_jar }}"
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+
+- name: Create component directory to HDFS
+  shell: hdfs dfs -mkdir -p /component-data/{{ comp_name }}
+  run_once: true
+
+- name: Copy component to HDFS
+  shell: hdfs dfs -put -f {{ comp_dir }}/java/{{ comp_jar }} /component-data/{{ comp_name }}/{{ comp_jar }}
+  run_once: true

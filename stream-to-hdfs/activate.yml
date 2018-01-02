@@ -1,0 +1,7 @@
+---
+- hosts: headnode
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - headnode

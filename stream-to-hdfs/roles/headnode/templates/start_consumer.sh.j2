@@ -1,0 +1,4 @@
+#!/bin/bash
+read -p "Username: " DL_USERNAME
+read -s -p "Password: " DL_PASSWORD
+curl -k --user "$DL_USERNAME:$DL_PASSWORD" -v -H 'X-Requested-By: $DL_USERNAME' -H 'Content-Type: application/json' -X POST --data @job.json "{{ consumer_spark_url }}"
