@@ -1,0 +1,5 @@
+- name: Restart cressidaods
+  service:
+     name: cressidaods.service
+     state: restarted 
+     enabled: yes

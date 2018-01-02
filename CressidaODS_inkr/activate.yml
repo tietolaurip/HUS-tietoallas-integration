@@ -1,0 +1,11 @@
+- hosts: kafka[1]
+  vars_prompt:
+  - name: "maven_user"
+    prompt: "Artifactory user"
+  - name: "maven_pwd"
+    prompt: "Artifactory password"
+  vars_files:
+    - ../config/vars.yml            # base/global variables
+    - config/vars.yml               # Own variables
+  roles:
+    - cressidaods_incr
