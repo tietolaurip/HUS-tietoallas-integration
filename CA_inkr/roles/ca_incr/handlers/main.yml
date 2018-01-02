@@ -1,0 +1,5 @@
+- name: Restart ca
+  service:
+     name: ca.service
+     state: restarted 
+     enabled: yes

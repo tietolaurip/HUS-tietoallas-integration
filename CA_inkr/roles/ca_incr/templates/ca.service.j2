@@ -1,0 +1,13 @@
+[Unit]
+Description=CA incremental import service
+Before=
+After=network.target
+
+[Service]
+User={{ admin_name }}
+WorkingDirectory={{ comp_dir }}
+ExecStart=/usr/bin/java -Xmx1G -jar {{ ca_jar_name }}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

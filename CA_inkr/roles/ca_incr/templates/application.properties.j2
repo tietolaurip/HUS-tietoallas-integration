@@ -1,0 +1,24 @@
+fi.datalake.ca.instancename=ca
+
+bootstrap.servers={{ groups['kafka'][1] }}:9092
+max.request.size=20971520
+
+fi.datalake.statusdb.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+fi.datalake.statusdb.username={{ db_admin }}
+fi.datalake.statusdb.password={{ db_admin_pwd }}
+fi.datalake.statusdb.url=jdbc:sqlserver://{{ main_res_group }}-db.database.windows.net:1433;database=status;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+
+fi.datalake.sourcedb.username={{ comp_sourcedb_user }}
+fi.datalake.sourcedb.password={{ comp_sourcedb_pwd }}
+fi.datalake.sourcedb.url={{ comp_sourcedb_url }}
+
+management.port=8081
+management.security.role=SUPERUSER
+management.security.enabled=false
+
+endpoints.info.id=info
+endpoints.info.sensitive=false
+endpoints.info.enabled=true
+
+spring.boot.admin.url=http://{{ groups['monitoring'][0] }}:1111
+spring.application.name=CA-Incremental-Import-Service
