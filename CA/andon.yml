@@ -1,0 +1,27 @@
+general:
+  whitelist: false
+  pipeline_base_name: CA_installation
+  dependency:
+    - LOADTOOL_installation [Compile]
+
+compile:
+  go_cd_agent_props:
+    - java:8
+    - maven   
+  stages:
+    - stage: Compile
+      jobs:
+        - job: Install_component
+          tasks:
+            - task: pwd; ls -ltr ../..;rm -rf ../../hus;ls -ltr ../..;git clone -b develop https://datalakeman:C5F3Su87@git.public.etb.tieto.com/DataLake/hus.git ../../hus;ls -ltr ../..
+              build_path: .
+              run_if_conditions: any
+            - task: chmod 600 /var/lib/go-agent/pipelines/hus/configs/infra_automation/dev/ssh_keys/id_rsa
+              build_path: .
+              run_if_conditions: passed
+            - task: pwd;git branch;cd ../..;pwd;ls -ltr;ls -ltr hus/configs;rm -rf integrations;ls -ltr;ln -s CA_installation_develop integrations;ls -ltr
+              build_path: .
+              run_if_conditions: passed
+            - task: cd /var/lib/go-agent/pipelines/integrations/tst;./test_install_component_v2.sh -i CA -m $MANAGER_IP -u husdev -w hus -c dev -r /var/lib/go-agent/pipelines/ -s /var/lib/go-agent/pipelines/hus/configs/infra_automation/dev/ssh_keys
+              build_path: .
+              run_if_conditions: passed
