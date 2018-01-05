@@ -1,0 +1,14 @@
+- hosts: kafka[0]
+  vars_files:
+    - ../config/vars.yml            # base/global variables
+    - config/vars.yml               # Own variables
+  roles:
+    - add_kafka_topic
+
+- hosts: sftp
+  vars_files:
+    - ../config/vars.yml            # base/global variables
+    - config/vars.yml               # Own variables
+  roles:
+    - incremental_import
+

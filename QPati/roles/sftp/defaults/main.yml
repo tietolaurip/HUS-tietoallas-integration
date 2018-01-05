@@ -1,0 +1,32 @@
+---
+# For more information about default variables see:
+# http://www.ansibleworks.com/docs/playbooks_variables.html#id26
+#
+# sftp_users:
+#   - username: foo
+#     name: foo bar
+#     # openssl passwd -salt 'somesalt' -1 'secret'
+#     password: '$1$somesalt$jezmI5TSY7mVTzHLgsK5L.'
+#     authorized_keys: []
+#     home: /mnt/datadisk
+#     group: ftp
+#     groups:
+#       - staff
+#       - www-data
+
+# list of sftp users
+sftp_users: []
+# default user group
+sftp_users_group: sftp-source-systems
+# default user groups
+sftp_users_groups: []
+# users home directory
+sftp_users_home: /mnt/datadisk
+# list of user writeable folders
+sftp_users_folders: ['data']
+
+comp_sftp_root: "{{ sftp_users_home }}/{{ comp_name_low }}/chroot"
+#comp_sftp_datapath: "{{ comp_sftp_root }}/data"
+#comp_sftp_refpath: "{{ comp_sftp_root }}/previous_refs"
+comp_sftp_datapath: "{{ comp_sftp_root }}/{{ sftp_users_folders[0] }}"
+comp_sftp_refpath: "{{ comp_sftp_root }}/previous_refs"

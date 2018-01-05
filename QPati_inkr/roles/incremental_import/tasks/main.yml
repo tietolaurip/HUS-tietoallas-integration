@@ -1,0 +1,61 @@
+- name: Create component dir
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ admin_name }}"
+    group: "{{ admin_name }}"
+    mode: 0755
+
+- name: Create config dir
+  file:
+    path: "{{ comp_dir }}/config"
+    state: directory
+    owner: "{{ admin_name }}"
+    group: "{{ admin_name }}"
+    mode: 0755
+
+- name: Create log dir
+  file:
+      path: "{{ datalake_log_dir }}/{{ comp_name }}"
+      state: directory
+      owner: "{{ admin_name }}"
+      group: "{{ admin_name }}"
+      mode: 0700
+
+- name: Add application properties
+  template:
+    src: application.properties.j2
+    dest: "{{ comp_dir }}/config/application.properties"
+  notify: Restart {{ comp_system_d_service_name }}
+
+- name: Install prequisites for the maven_artifact module (pip)
+  package:
+    name:  python-pip
+    state: latest
+
+- name: Install prequisites for the maven_artifact module (lxml)
+  pip:
+    name: lxml
+
+- name: Download application from Artifactory
+  maven_artifact:
+    group_id: fi.tietoallas.integration.incremental
+    artifact_id: "{{ comp_artifact_id }}"
+    version: "{{ comp_version }}"
+    repository_url: "{{ maven_repository }}"
+    username: "{{ datalake_maven_username }}"
+    password: "{{ datalake_maven_password }}"
+    dest: "{{ comp_dir }}/{{ comp_jar_name }}"
+  notify: Restart {{ comp_system_d_service_name }}
+
+- name: Copy systemd start script
+  template:
+    src: comp.service.j2
+    dest: "/etc/systemd/system/{{ comp_system_d_service_name }}.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart {{ comp_system_d_service_name }}
+
+- name: Reload systemd configs
+  command: systemctl daemon-reload

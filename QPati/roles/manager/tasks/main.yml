@@ -1,0 +1,42 @@
+---
+
+- name: Directory for QPati
+  become: yes
+  file:
+    path: /opt/DataLake/QPati
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Directory for configs
+  become: yes
+  file:
+    path: "{{ comp_dir }}/config"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Add configuration script
+  template:
+    src: "config.sh.j2"
+    dest: "{{ comp_dir }}/config/config.sh"
+    mode: 0755
+
+- name: Create log dir
+  become: yes
+  file:
+      path: /var/log/DataLake/QPati/
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
+
+- name: Copy metadata files
+  synchronize:
+    src: "metadata"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+

@@ -1,0 +1,148 @@
+---
+
+- name: Ensure clean start
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: absent
+
+- name: Adding users
+  user:
+    name: "{{ item.username }}"
+    comment: "{{ item.username }}"
+    home: "{{ item.home|default(sftp_users_home ~ '/' ~ item.username ) }}"
+    group: "{{ item.group|default(sftp_users_group) }}"
+    groups: "{{ item.groups|default(sftp_users_groups)|join(',') }}"
+    password: "{{ item.password }}"
+    shell: "/usr/sbin/nologin"
+  with_items: "{{ sftp_users }}"
+  tags:
+    - networking
+    - sftp
+    - users
+
+- name: Setting user home permission
+  file: 
+    dest: "{{ item.home|default(sftp_users_home ~ '/' ~ item.username) }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items: "{{ sftp_users }}"
+  tags:
+    - networking
+    - sftp
+    - users
+
+- name: Adding user ssh folder
+  file:
+    dest: "{{ item.home|default(sftp_users_home ~ '/' ~ item.username) }}/.ssh"
+    owner: "{{ item.username }}"
+    group: "{{ item.group|default(sftp_users_group) }}"
+    state: directory
+    mode: 0700
+  with_items: "{{ sftp_users }}"
+  tags:
+    - networking
+    - sftp
+    - users
+
+- name: Adding authorized keys
+  template:
+    src: home-user-ssh-authorized_keys.j2
+    dest: "{{ item.home|default(sftp_users_home ~ '/' ~ item.username) }}/.ssh/authorized_keys"
+    owner: "{{ item.username }}"
+    group: "{{ item.group|default(sftp_users_group) }}"
+    mode: 0600
+  with_items: "{{ sftp_users }}"
+  tags:
+    - networking
+    - sftp
+    - users
+
+- name: Adding users chroot folder
+  file:
+    dest: "{{ item.home|default(sftp_users_home ~ '/' ~ item.username) }}/chroot"
+    state: directory
+    owner: root
+    group: "{{ item.group|default(sftp_users_group) }}"
+    mode: 0755
+  with_items: "{{ sftp_users }}"
+  tags:
+    - networking
+    - sftp
+    - users
+
+- name: Adding users folders
+  file:
+    dest: "{{ item[0].home|default(sftp_users_home ~ '/' ~ item[0].username) }}/chroot/{{ item[1] }}"
+    state: directory
+    owner: "{{ item[0].username }}"
+    group: "{{ item[0].group|default(sftp_users_group) }}"
+    mode: 0775
+  with_nested:
+    - "{{ sftp_users }}"
+    - "{{ sftp_users_folders }}"
+  tags:
+    - networking
+    - sftp
+    - users
+
+- name: Configuring users sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: "{{ 'Match USER ' ~ item.username ~ '\n\tAllowTcpForwarding no\n\tForceCommand internal-sftp\n\tPasswordAuthentication no\n\tChrootDirectory %h/chroot' }}"
+    regexp: "^Match USER {{ item.username }}"
+    validate: "/usr/sbin/sshd -T -f %s"
+    insertbefore: "^{{ sftp_placeholder_end }}"
+    state: present
+  notify: restart ssh
+  with_items: "{{ sftp_users }}"
+  tags:
+    - networking
+    - sftp
+    - users
+
+########################################################################################
+# Setup for component
+########################################################################################
+
+- name: Add datalake_admin_user to sftp_users_group
+  command: "usermod -a -G {{ sftp_users_group }} {{ datalake_admin_user }}"
+  become_method: sudo
+
+- name: Directory for component config
+  become: yes
+  file:
+    path: "{{ comp_dir }}/config"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Add configuration script
+  template:
+    src: "config.sh.j2"
+    dest: "{{ comp_dir }}/config/config.sh"
+    mode: 0755
+
+- name: Create directory for previous reference files
+  file:
+    state: directory
+    path: "{{ comp_sftp_refpath }}"
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+    recurse: yes
+
+- name: Create log dir
+  become: yes
+  file:
+      path: "{{ datalake_log_dir }}/{{ comp_name }}"
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
+
+
+

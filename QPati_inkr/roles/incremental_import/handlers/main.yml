@@ -1,0 +1,5 @@
+- name: Restart {{ comp_system_d_service_name }}
+  service:
+     name: "{{ comp_system_d_service_name }}.service"
+     state: restarted 
+     enabled: yes

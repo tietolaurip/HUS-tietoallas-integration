@@ -1,0 +1,23 @@
+fi.datalake.comp.sftp.datapath={{ comp_sftp_datapath }}
+fi.datalake.comp.sftp.refpath={{ comp_sftp_refpath }}
+fi.datalake.comp.wakeup.interval={{ comp_wakeup_interval }}
+fi.datalake.comp.readyflag=_TIETOALLAS_VALMIS_
+
+bootstrap.servers={{ groups['kafka'][0] }}:9092
+max.request.size=20971520
+
+fi.datalake.metadata.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+fi.datalake.metadata.username={{ db_admin }}
+fi.datalake.metadata.password={{ db_admin_pwd }}
+fi.datalake.metadata.url=jdbc:sqlserver://{{ main_res_group }}-db.database.windows.net:1433;database=status;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+
+management.port=8081
+management.security.role=SUPERUSER
+management.security.enabled=false
+
+endpoints.info.id=info
+endpoints.info.sensitive=false
+endpoints.info.enabled=true
+
+spring.boot.admin.url=http://{{ groups['monitoring'][0] }}:1111
+spring.application.name={{ comp_instance_name }}-Incremental-Import-Service

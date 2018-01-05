@@ -1,0 +1,46 @@
+---
+
+- name: Ensure clean start
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: absent
+
+- name: Directory for QPati
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Copy config files
+  synchronize:
+    src: "config"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- name: Copy staging files
+  synchronize:
+    src: "staging"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+# Copy template for this integration (jdbc/kafka) from common templates
+- name: Create config.sh from base jdbc_config.sh.j2
+  template:
+    src: "{{ datalake_dir }}/base/roles/headnode/files/lib/templates/{{ comp_int_type }}_config.sh.j2"
+    dest: "{{ comp_dir }}/config/config.sh"
+    mode: 0755
+
+- name: Create log dir
+  become: yes
+  file:
+      path: "{{ datalake_log_dir }}/{{ comp_name }}"
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
