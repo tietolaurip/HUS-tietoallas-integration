@@ -1,0 +1,27 @@
+---
+# Playbook for installing the integration
+
+#############################################################
+# Setup headnode
+#############################################################
+- hosts: headnode
+  vars_files:
+    - ../config/vars.yml
+    - ../Metadata/config/vars.yml # Metadata variables
+    - ../StatusDb/config/vars.yml # StatusDb variables
+    - config/vars.yml
+  roles:
+    - headnode
+    - lib
+
+#############################################################
+# Setup manager
+#############################################################
+- hosts: manager
+  vars_files:
+     - ../config/vars.yml # global variables
+     - ../Metadata/config/vars.yml # Metadata variables
+     - ../StatusDb/config/vars.yml # StatusDb variables
+     - config/vars.yml    # component specific variables
+  roles:
+    - manager
