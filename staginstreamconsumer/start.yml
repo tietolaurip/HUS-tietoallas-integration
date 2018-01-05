@@ -1,0 +1,10 @@
+- hosts: utility
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+
+ tasks:
+    - name: Start consumer
+      command: "./start_consumer.sh"
+      args:
+         chdir: "{{ comp_dir }}"

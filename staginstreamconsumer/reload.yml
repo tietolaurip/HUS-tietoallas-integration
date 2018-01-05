@@ -1,0 +1,8 @@
+- hosts: utility
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - stop
+    - start
+    

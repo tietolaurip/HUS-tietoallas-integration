@@ -1,0 +1,5 @@
+#!/bin/bash
+export PYTHONPATH=config/
+# Copy COMP_JAR, Driver JAR and properties-file into hdfs
+python AzCopy.py {{ comp_jar_name }} {{ comp_hdfs_java_dir_short }}/{{ comp_jar_name }}
+python AzCopy.py application.properties {{ comp_hdfs_java_dir_short }}/application.properties

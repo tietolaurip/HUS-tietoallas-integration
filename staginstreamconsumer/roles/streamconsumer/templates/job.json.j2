@@ -1,0 +1,19 @@
+{
+    "name": "{{ comp_name }}",
+    "file": "{{ comp_hdfs_jar  }}",
+    "className": "{{ consumer_spark_main_class }}",
+    "args": [
+        "jdbc:sqlserver://{{ main_res_group }}-db.database.windows.net:1433;database=status;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", 
+        "{{ db_admin }}", 
+        "{{ db_admin_pwd }}", 
+        "http://{{ groups['utility'][0] }}:9990/pseudo", 
+        "{{ groups['kafka'][0] }}:9092", 
+        "integration-consumer-group"
+    ],
+    "files": [
+        "{{ comp_hdfs_java_dir }}\/application.properties"
+    ],
+    "driverMemory": "{{ spark_driver_memory }}",
+    "numExecutors": "{{ spark_num_executors }}",
+    "executorMemory": "{{ spark_executor_memory }}"
+}

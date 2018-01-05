@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -k --user "{{ admin_name }}:{{ hdinsight_admin_pwd }}" -v -H 'Content-Type: application/json'  -X POST --data @job.json "{{ consumer_spark_url }}"
