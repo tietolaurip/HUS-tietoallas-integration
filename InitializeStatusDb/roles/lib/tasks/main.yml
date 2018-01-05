@@ -1,0 +1,7 @@
+---
+- name: Copy java lib files
+  synchronize:
+    src: "java"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes

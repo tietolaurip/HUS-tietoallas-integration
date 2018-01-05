@@ -1,4 +1,4 @@
-package fi.tietoallas.integration.initializestatusdb.service;
+package fi.tietoallas.integration.initializestatusdb;
 
 /*-
  * #%L
@@ -19,5 +19,19 @@ package fi.tietoallas.integration.initializestatusdb.service;
  * limitations under the License.
  * #L%
  */
-public class InitializeServiceTest {
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@RunWith(JUnit4.class)
+public class TimeTest {
+
+    @Test
+    public void testParse(){
+        LocalDateTime.parse("2017-10-06T19:33:52.739", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
+
+    }
 }

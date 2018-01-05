@@ -1,0 +1,13 @@
+---
+# Playbook for installing component integration
+
+#############################################################
+# Setup headnode
+#############################################################
+- hosts: headnode
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - headnode
+    - lib
