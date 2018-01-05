@@ -1,0 +1,91 @@
+- name: Directory for Component integration
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Copy setup files
+  copy:
+    src: "AzCopy.py"
+    dest: "{{ comp_dir }}"
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Create log dir
+  file:
+      path: "{{ datalake_log_dir }}/{{ comp_name }}"
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
+
+- name: Add configuration scripts
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ comp_dir }}/{{ item.dest }}"
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+  with_items:
+    - { src: application.properties.j2, dest: application.properties }
+    - { src: job.json.j2, dest: job.json }
+    - { src: initial_setup.sh.j2, dest: initial_setup.sh }
+    - { src: start_consumer.sh.j2, dest: start_consumer.sh }
+
+- name: Add adls config 
+  copy:
+    src: "config/adlSecrets.py"
+    dest: "{{ comp_dir }}/adlSecrets.py"
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0700
+
+- name: Download application from Artifactory
+  maven_artifact:
+    group_id: fi.tietoallas.integration.streaming
+    artifact_id: streamingkafkaconsumer
+    version: "{{ streamingkafkaconsumer_version }}"
+    repository_url: "{{ maven_repository }}"
+    username: "{{ datalake_maven_username }}"
+    password: "{{ datalake_maven_password }}"
+    dest: "{{ comp_dir }}/{{ streamingkafkaconsumer_jar_name }}"
+    
+- name: Change downloaded jar permissions
+  file:
+    path: "{{ comp_dir }}/{{ streamingkafkaconsumer_jar_name }}"
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+
+  
+###################################################################################
+# Install python components
+###################################################################################
+- name: enable EPEL repo in order to be able to install python-pip
+  yum:
+    name: epel-release
+    enablerepo: extras
+
+- name: Install dependencies
+  package:
+    name: python-pip,gcc,libffi-devel,openssl-devel,python-devel
+
+- name: Install Azure Pyhton SDK
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - azure-mgmt-resource
+    - azure-mgmt-datalake-store
+    - azure-datalake-store
+
+###################################################################################
+# Start the consumer service
+###################################################################################
+
+- name: Copy files to ADL
+  shell: "{{ comp_dir }}/initial_setup.sh"
+  args:
+    chdir: "{{ comp_dir }}"
+

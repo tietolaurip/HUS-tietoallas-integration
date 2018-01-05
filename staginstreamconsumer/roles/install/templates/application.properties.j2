@@ -1,0 +1,9 @@
+fi.datalake.statusdb.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+fi.datalake.statusdb.username={{ db_admin }}
+fi.datalake.statusdb.password={{ db_admin_pwd }}
+fi.datalake.statusdb.url=jdbc:sqlserver://{{ main_res_group }}-db.database.windows.net:1433;database=status;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+
+fi.datalake.metadatadb.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+fi.datalake.metadatadb.username={{ db_admin }}
+fi.datalake.metadatadb.password={{ db_admin_pwd }}
+fi.datalake.metadatadb.url=jdbc:sqlserver://{{ main_res_group }}-db.database.windows.net:1433;database=metadata;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
