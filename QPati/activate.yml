@@ -1,0 +1,42 @@
+---
+# Playbook for installing and configuring QPati integration
+- hosts: manager, sftp, headnode
+  roles:
+    - set_facts
+
+#############################################################
+# Setup sftp-server
+#############################################################
+- hosts: sftp
+  become: yes #yes -> running as root
+  vars_files:
+    - ../config/vars.yml # global variables
+    - config/vars.yml    # qpati specific variables
+  vars:
+    ssh_service_state: started
+  roles:
+    - sftp
+
+#############################################################
+# Setup headnode
+#############################################################
+- hosts: headnode
+  vars_files:
+    - ../config/vars.yml # global variables
+    - ../Metadata/config/vars.yml # Metadata variables
+    - ../StatusDb/config/vars.yml # StatusDb variables
+    - config/vars.yml    # qpati specific variables
+  roles:
+    - headnode
+
+#############################################################
+# Setup manager
+#############################################################
+- hosts: manager
+  vars_files:
+    - ../config/vars.yml # global variables
+    - ../Metadata/config/vars.yml # Metadata variables
+    - ../StatusDb/config/vars.yml # StatusDb variables
+    - config/vars.yml    # qpati specific variables
+  roles:
+    - manager

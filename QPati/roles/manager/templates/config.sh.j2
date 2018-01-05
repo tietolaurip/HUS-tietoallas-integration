@@ -1,0 +1,17 @@
+# This is a configuration file for Component manager-vm
+# It is filled with parameters suitable for a particular environment
+# at installation time
+export COMP_NAME='{{ comp_name }}'
+export COMP_DIR='{{ comp_dir }}'
+export COMP_JAR='{{ comp_jar }}'
+
+export SFTP_VM_IP='{{ sftp_vm_ip }}'
+export HEADNODE_IP='{{ headnode_ip }}' # TODO use base DATALAKE_HN0
+export SECRETS_DIR='{{ datalake_secrets_dir }}'
+
+export COMP_STATUSDB_TABLEFILE_JAR="{{ comp_statusdb_tablefile_jar }}"
+export COMP_STATUSDB_COLUMNFILE_JAR="{{ comp_statusdb_columnfile_jar }}"
+
+export COMP_METADATA_COMPONENTFILE_JAR="{{ comp_metadata_componentfile_jar }}"
+export COMP_METADATA_TABLEFILE_JAR="{{ comp_metadata_tablefile_jar }}"
+export COMP_METADATA_COLUMNFILE_JAR="{{ comp_metadata_columnfile_jar }}"

@@ -1,0 +1,13 @@
+[Unit]
+Description={{ comp_instance_name }} incremental import service
+Before=
+After=network.target
+
+[Service]
+User={{ admin_name }}
+WorkingDirectory={{ comp_dir }}
+ExecStart=/usr/bin/java -Xmx1G -jar {{ comp_jar_name }}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

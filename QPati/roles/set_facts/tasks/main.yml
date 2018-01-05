@@ -1,0 +1,10 @@
+- name: Set host IPs of nodes
+  set_fact:
+    manager_ip: "{{hostvars[groups['manager'][0]].ansible_eth0.ipv4.address}}"
+    sftp_vm_ip: "{{hostvars[groups['sftp'][0]].ansible_eth0.ipv4.address}}"
+    headnode_ip: "{{hostvars[groups['headnode'][0]].ansible_eth0.ipv4.address}}"
+  changed_when: false
+
+- name: Dynaamiset ip:t
+  debug:
+    msg: "headnode_ip: {{ headnode_ip }} sftp_vm_ip: {{ sftp_vm_ip }} manager_ip: {{ manager_ip }}"
