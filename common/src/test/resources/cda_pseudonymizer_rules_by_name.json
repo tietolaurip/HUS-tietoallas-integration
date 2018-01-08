@@ -1,0 +1,26 @@
+{
+  "rules": [
+    {
+      "type": "patientRole",
+      "hash": ["*:id/@extension"]
+    },
+    {
+      "type": "patient",
+      "null": ["*:name/*:given", "*:name/*:family"]
+    },
+    {
+      "type": "author",
+      "hash": ["*:assignedAuthor/id/@extension"],
+      "null": ["*:assignedAuthor/*:assignedPerson/*:name/*:given", "*:assignedAuthor/*:assignedPerson/*:name/*:family"]
+    },
+    {
+      "type": "section",
+      "condition": ["*:code[@code='18' and @codeSystem='1.2.246.537.6.12.2002.331']"],
+      "hash": ["*:text/*:content", "*:entry/*:observation/*:value/@extension"]
+    },
+    {
+      "type": "hl7fi:localHeader",
+      "remove": ["*:signatureCollection"]
+    }
+  ]
+}
