@@ -1,0 +1,23 @@
+server.port = {{ rest_service_port }}
+
+logging.config=file:{{ rest_dir }}/config/logback.xml
+
+identitymanager.url={{ pseudo_rest_url }}
+kafka.bootstrap.servers={{ kafka_bootstrap_server }}:9092
+pushgateway.host={{ pushgateway_host }}:9091
+
+management.port={{ rest_service_port }}
+management.security.role=SUPERUSER
+management.security.enabled=false
+
+endpoints.info.id=info
+endpoints.info.sensitive=false
+endpoints.info.enabled=true
+
+spring.boot.admin.url=http://{{ spring_boot_host }}:1111
+spring.application.name=IdentityManager-Service
+spring.boot.admin.username=admin
+spring.boot.admin.password=849bpMU8ENJ3Qc8E
+
+security.user.name=admin
+security.user.password=admin

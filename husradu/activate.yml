@@ -1,0 +1,13 @@
+- hosts: kafka
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - husradu
+
+- hosts: headnode
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - init

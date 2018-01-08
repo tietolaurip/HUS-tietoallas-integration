@@ -1,0 +1,25 @@
+datalake_dir: "/opt/DataLake"
+spring_boot_host: "localhost"
+
+rest_comp_name: "husradu"
+rest_service_name: "husradu"
+rest_user: "husradu"
+rest_group: "husradu"
+rest_dir: "{{ datalake_dir }}/{{ rest_comp_name }}"
+rest_version: "1.0.2"
+rest_jar_name: "husradu-{{ rest_version }}.jar"
+rest_service_port: "9881"
+
+mongodb_staging_host: "192.168.99.100"
+mongodb_staging_port: 27017
+mongodb_staging_username: ""
+mongodb_staging_password: ""
+mongodb_staging_database: "staging"
+
+mongodb_storage_host: "192.168.99.100"
+mongodb_storage_port: 27017
+mongodb_storage_username: ""
+mongodb_storage_password: ""
+mongodb_storage_database: "storage"
+
+pseudo_rest_url: "http://192.168.99.100:3000/pseudo"

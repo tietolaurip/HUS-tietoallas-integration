@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <File>/var/log/DataLake/local/{{ rest_service_name }}/{{ rest_service_name }}.log</File>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <FileNamePattern>/var/log/DataLake/local/{{ rest_service_name }}/{{ rest_service_name }}.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+      </rollingPolicy>
+
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <Pattern>
+          %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{22} - %msg%n
+        </Pattern>
+      </layout>
+    </appender>
+
+    <appender name="file-logstash" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <File>/var/log/DataLake/logstash/{{ rest_service_name }}/{{ rest_service_name }}.log</File>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <FileNamePattern>/var/log/DataLake/logstash/{{ rest_service_name }}/{{ rest_service_name }}.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+      </rollingPolicy>
+
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <Pattern>
+          %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{22} - %msg%n
+        </Pattern>
+      </layout>
+
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <logger name="fi.tietoallas" level="info" additivity="false">
+        <appender-ref ref="console" />
+        <appender-ref ref="file" />
+        <appender-ref ref="file-logstash" />
+    </logger>
+
+    <root level="error">
+        <appender-ref ref="console" />
+        <appender-ref ref="file" />
+        <appender-ref ref="file-logstash" />
+    </root>
+
+</configuration>

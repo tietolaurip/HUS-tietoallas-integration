@@ -1,0 +1,115 @@
+- name: Create group
+  group:
+    name: "{{ rest_group }}"
+    state: present
+  become: yes
+  
+- name: Create user
+  user:
+    name: "{{ rest_user }}"
+    group: "{{ rest_group }}"
+  become: yes
+
+- name: Ensure that the component user can access /var/log/DataLake
+  file:
+    path: "/var/log/DataLake"
+    state: directory
+    mode: 0777
+  become: yes
+
+- name: Create general file structure
+  file:
+    path: "{{ item }}"
+    owner: "{{ rest_user }}"
+    group: "{{ rest_group }}"
+    state: directory
+  with_items:
+    - "{{ rest_dir }}/config"
+    - "/var/log/DataLake/local/{{ rest_service_name }}"
+    - "/var/log/DataLake/logstash/{{ rest_service_name }}"
+  notify: Restart rest service
+  become: yes
+
+- name: Create app properties
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ rest_dir }}/config/{{ item }}"
+    owner: "{{ rest_user }}"
+    group: "{{ rest_group }}"
+  with_items:
+    - "application.properties"
+    - "logback.xml"    
+  notify: Restart rest service
+  become: yes
+
+- name: Install prequisites for the maven_artifact module (pip)
+  package:
+    name:  python-pip
+    state: latest
+  become: yes
+
+- name: Install prequisites for the maven_artifact module (lxml)
+  pip:
+    name: lxml
+  become: yes
+
+- name: Download application from Artifactory
+  maven_artifact:
+    group_id: fi.tietoallas.integration
+    artifact_id: husradu
+    version: "{{ rest_version }}"
+    repository_url: "{{ datalake_maven_repository }}"
+    username: "{{ datalake_maven_username }}"
+    password: "{{ datalake_maven_password }}"
+    dest: "{{ rest_dir }}/{{ rest_jar_name }}"
+  become: yes
+  notify: Restart rest service
+
+- name: Install integration specific Nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: "/etc/nginx/integrations/{{ rest_service_name }}.conf"
+    owner: root
+    group: root
+  notify: Reload nginx
+  become: yes     
+
+- name: Copy systemd start scirpt
+  template:
+    src: rest.service.j2
+    dest: "/etc/systemd/system/{{ rest_service_name }}.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart rest service
+  become: yes
+
+- name: Create 'husradu-orig' topic to Kafka
+  shell: |
+    EXISTING_TOPICS="$(/opt/DataLake/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --list)";
+    if ! echo "$EXISTING_TOPICS" | grep husradu-orig; then
+      /opt/DataLake/kafka/bin/kafka-topics.sh \
+        --create \
+        --zookeeper localhost:2181 \
+        --replication-factor 2 \
+        --partitions 3 \
+        --topic husradu-orig;
+    fi
+  run_once: yes
+
+- name: Create 'husradu-pseudo' topic to Kafka
+  shell: |
+    EXISTING_TOPICS="$(/opt/DataLake/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --list)";
+    if ! echo "$EXISTING_TOPICS" | grep husradu-pseudo; then
+      /opt/DataLake/kafka/bin/kafka-topics.sh \
+        --create \
+        --zookeeper localhost:2181 \
+        --replication-factor 2 \
+        --partitions 1 \
+        --topic husradu-pseudo;
+    fi
+  run_once: yes
+
+- name: Reload systemd configs
+  command: systemctl daemon-reload
+  become: yes
