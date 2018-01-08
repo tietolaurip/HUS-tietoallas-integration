@@ -1,0 +1,11 @@
+# This is a configuration file for Cressida ODS
+# It is filled with parameters suitable for a particular environment
+# at installation time
+. /opt/DataLake/config/config.sh
+. /opt/DataLake/Metadata/config/config.sh
+
+export CODESERVER_URL='{{ codeserver_url }}'
+export CODESERVER_STAGING_URL='{{ codeserver_staging_url }}'
+export CODESERVER_STORAGE_URL='{{ codeserver_storage_url }}'
+export CODESERVER_TABLE_NAMES_FILE="{{ comp_dir }}/config/{{ table_names_file }}"
+export CODESERVER_CODESETS_FILE="{{ comp_dir }}/config/{{ codeset_names_file }}"

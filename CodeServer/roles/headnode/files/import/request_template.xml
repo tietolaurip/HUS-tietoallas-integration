@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:codeapi:Codeservice">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <urn:ListCodes>
+      <urn:termSystem id="__REPLACE_WITH_CODE_SYSTEM_ID__"></urn:termSystem>
+      <urn:howMany>-1</urn:howMany>
+    </urn:ListCodes>
+  </soapenv:Body>
+</soapenv:Envelope>

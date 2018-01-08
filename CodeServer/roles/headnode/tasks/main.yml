@@ -1,0 +1,89 @@
+---
+
+- name: Ensure clean start
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: absent
+
+- name: Directory for CodeServer
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Create log dir
+  become: yes
+  file:
+      path: "{{ datalake_log_dir }}/{{ comp_name }}"
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
+
+- name: Copy config files
+  synchronize:
+    src: "config"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- name: Copy import files
+  synchronize:
+    src: "import"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- name: Copy orchestration files
+  synchronize:
+    src: "orchestration"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- name: Copy storage files
+  synchronize:
+    src: "storage"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+- name: Install libxml2
+  become: yes
+  apt:
+    name: libxml2-dev
+
+- name: Install libxslt
+  become: yes
+  apt:
+    name: libxslt-dev
+
+- name: Install lxml
+  become: yes
+  pip:
+    name: lxml
+
+- name: Install unicodecsv
+  become: yes
+  pip:
+    name: unicodecsv
+
+- name: Add configuration script
+  template:
+    src: config.sh.j2
+    dest: "{{ comp_dir }}/config/config.sh"
+    mode: 0755
+
+- name: Add cron job
+  cron:
+    cron_file: "{{ comp_name }}"
+    name: "{{ comp_name }} incremental import"
+    state: present
+    hour: "{{ codeserver_import_hour }}"
+    minute: "{{ codeserver_import_minute }}"
+    user: "{{ datalake_admin_user }}"
+    job: "{{ comp_dir }}/orchestration/orchestrate.sh"

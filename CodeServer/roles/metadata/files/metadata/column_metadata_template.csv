@@ -1,0 +1,16 @@
+data_column_name|orig_column_name|data_table_name|data_set_name|orig_type|description|code_system|sources|formation_rule|is_primary_key|foreign_key|format|unit_of_measure|pseudonymization_function|status|comment|source_document|hive_type|metadata_last_updated
+id|id|__CODESERVER_METADATA_IDS_TABLE__|CodeServer|string|attribute containing concept code id||||1||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+id|id|__CODESERVER_METADATA_ATTRIBUTES_TABLE__|CodeServer|string|attribute containing concept code id||||1||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+language|language|__CODESERVER_METADATA_ATTRIBUTES_TABLE__|CodeServer|string|attribute containing ISO 639-1 language code||||1||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+type|type|__CODESERVER_METADATA_ATTRIBUTES_TABLE__|CodeServer|string|attribute containing property of concept code||||1||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+value|value|__CODESERVER_METADATA_ATTRIBUTES_TABLE__|CodeServer|string|"element value containing value of the property defined by the ""type"" attribute"||||0||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+id|id|__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer|string|attribute containing concept code id||||1||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+referenceid|referenceId|__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer|string|attribute containing name of relation between the concept code and the referenced concept code||||1||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+begindate|beginDate|__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer|date|attribute containing beginning date value of referenced concept code||||0||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+code|code|__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer|string|attribute containing id of referenced concept code||||1||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+codesystem|codeSystem|__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer|string|attribute containing code system id of referenced concept code||||0||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+codesystemversion|codeSystemVersion|__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer|string|attribute containing code system version id of referenced concept code||||0||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+expirationdate|expirationDate|__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer|date|attribute containing expiring date value of referenced concept code||||0||||PASS|ACTIVE||CodeServerWebServicesAPI-1.3.pdf|string|__DATE_NOW__
+allas__pvm_partitio||__CODESERVER_METADATA_IDS_TABLE__|CodeServer||import date||||||||PASS|ACTIVE|||string|__DATE_NOW__
+allas__pvm_partitio||__CODESERVER_METADATA_ATTRIBUTES_TABLE__|CodeServer||import date||||||||PASS|ACTIVE|||string|__DATE_NOW__
+allas__pvm_partitio||__CODESERVER_METADATA_REFERENCES_TABLE__|CodeServer||import date||||||||PASS|ACTIVE|||string|__DATE_NOW__

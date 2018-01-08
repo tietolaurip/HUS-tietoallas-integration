@@ -1,0 +1,15 @@
+---
+
+- hosts: manager
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - metadata
+
+- hosts: maindl-headnode-primary
+  vars_files:
+    - ../config/vars.yml
+    - config/vars.yml
+  roles:
+    - headnode

@@ -1,0 +1,66 @@
+---
+
+- name: Directory for CodeServer
+  become: yes
+  file:
+    path: "{{ comp_dir }}"
+    state: directory
+    owner: "{{ datalake_admin_user }}"
+    group: "{{ datalake_admin_user }}"
+    mode: 0755
+
+- name: Create log dir
+  become: yes
+  file:
+      path: "{{ datalake_log_dir }}/{{ comp_name }}"
+      state: directory
+      owner: "{{ datalake_admin_user }}"
+      group: "{{ datalake_admin_user }}"
+      mode: 0700
+
+- name: Copy metadata files
+  synchronize:
+    src: "metadata"
+    dest: "{{ comp_dir }}"
+    recursive: yes
+    perms: yes
+
+###################################################################################
+# Install python components
+###################################################################################
+- name: Install gcc
+  become: yes
+  yum:
+    name: gcc
+
+- name: Install gcc
+  become: yes
+  yum:
+    name: gcc-c++
+
+- name: Install python-devel
+  become: yes
+  yum:
+    name: python-devel
+
+- name: enable EPEL repo in order to be able to install python-pip
+  become: yes
+  yum:
+    name: epel-release
+    enablerepo: extras
+
+- name: Install Python Pip
+  become: yes
+  yum:
+    name: python-pip
+
+- name: Install Python Pip
+  become: yes
+  yum:
+    name: python-pip
+    state: latest
+
+- name: Install pyodbc
+  become: yes
+  pip:
+    name: pyodbc
